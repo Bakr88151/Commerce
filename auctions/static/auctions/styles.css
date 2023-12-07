@@ -1,0 +1,80 @@
+body {
+    padding: 10px;
+}
+.listings{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: auto;
+}
+.card{
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+.card-image{
+    width: 30%;
+    height: 100%;
+    border: 1px solid rgb(77, 75, 75);
+}
+.card-body{
+    width: 70%;
+}
+.card-title{
+    height: 10%;
+}
+.card-description{
+    height: 60%;
+}
+.price{
+    height: 15%;
+}
+.date{
+    height: 15%;
+}
+.card-image img{
+    width: 100%;
+    min-height: 100%;
+}
+
+.image-container > img{
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0%);
+    -webkit-transform: translate(-50%, 0%);
+    -moz-transform: translate(-50%, 0%);
+    -ms-transform: translate(-50%, 0%);
+    -o-transform: translate(-50%, 0%);
+    height: 300px;
+    width: auto;
+}
+input[name="bid"]{
+    width: 100%;
+}
+input[type=submit]{
+    background-color: #0D7BFF;
+    color: white;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    outline: none;
+    border-width: 0px;
+}
+.comment{
+    border: solid black 1px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    padding: 3px;
+    margin: 5px;
+}

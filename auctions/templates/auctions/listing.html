@@ -1,0 +1,96 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+
+    <h1>Listing: {{ listing.title }}</h1>
+    <div class="image-container">
+    {% if listing.image %}
+        <img src="{{ listing.image }}" alt="{{ listing.title }} image">
+    {% else %}
+        <img src="{{ shopping_cart_img }}" alt="{{ listing.title }} image">
+    {% endif %}
+    </div>
+    <p style="margin-top: 30px;">{{ listing.description }}</p>
+    {% if listing.active %}
+        {% if listing.highest_bid %}
+        <strong>${{ listing.highest_bid.value | floatformat:2 }}</strong>
+        {% else %}
+        <strong>${{ listing.base_price | floatformat:2 }}</strong>
+        {% endif %}
+    {% endif %}
+    {% if listing.active == True %}
+        {% if listing.highest_bid.bidder %}<p>Highest Bid by <strong>{{ listing.highest_bid.bidder }}</strong></p>{% endif %}
+        {% if user.is_authenticated %}
+            {% if request.user == listing.poster %}
+            {% else %}
+                <form action="{% url 'listing' listing.id %}" method="post">
+                    {% csrf_token %}
+                    {{ bid_form  }}
+                    <input type="hidden" value="{{ request.user.id }}" name="user_id">
+                    <br>
+                    {% if user.is_authenticated %}
+                    <input type="submit" value="Place bid" style="margin-top: 10px;">
+                    {% else %}
+                    <input type="submit" value="Place bid" style="margin-top: 10px;" disabled>
+                    {% endif %}
+                </form>
+                {% if is_in_watchlist == False %}
+                    <form action="{% url 'addwatchlist' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                        <input type="submit" value="Add to WatchList" style="margin-top: 3px;">
+                    </form>
+                {% else %}
+                <form action="{% url 'removewatchlist' %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="listing_id" value="{{ listing.id }}">
+                    <input type="submit" value="Remove From WatchList" style="margin-top: 3px; background-color: red;">
+                </form>
+                {% endif %}
+            {% endif %}
+        {% else %}
+        <h1><a href="{% url 'login' %}">Login</a> to place a bid and comment</h1>
+        {% endif %}
+    {% else %}
+        <p style="font-size: 24px;">auction on this item is closed it was winned by <strong>{{ listing.highest_bid.bidder }}</strong> with a bid of: <strong>${{ listing.highest_bid.value | floatformat:2 }}</strong></p>
+    {% endif %}
+    {% if message %}
+        <ul><li>{{ message }}</li></ul>
+    {% endif %}
+    {% if listing.poster == request.user and listing.active == True %}
+        <form action="{% url 'close' %}" method='post'>
+            {% csrf_token %}
+            <input type="hidden", name="listing_id" value="{{ listing.id }}">
+            <input type="submit" value="Close auction" style="margin-top: 10px; background-color: red;">
+        </form>
+    {% endif %}
+    <h2>Details</h2>
+        <ul>
+            <li>Listed by <strong>{{ listing.poster.username }}</strong></li>
+            <li>Created : {{ listing.date }}</li>
+            {% if listing.category is not None %}
+            <li>Category: <a href="{% url 'category' listing.category %}">{{ listing.category }}</a></li>
+            {% endif %}
+        </ul>
+<hr>
+{% if user.is_authenticated %}
+<h3>Place comment:</h3>
+<form action="{% url 'placecomment' %}" method="post">
+    {% csrf_token %}
+    {{ comment_form }}
+    <input type="hidden" value="{{ listing.id }}" name="listing_id">
+    <input type="hidden" value="{{ request.user.id }}" name="user_id">
+    <input type="submit" value="comment">
+</form>
+{% endif %}
+<h2>Comments: </h2>
+{% for comment in comments %}
+<div class="comment">
+    <h5>{{ comment.poster }}</h5>
+    <hr>
+    <p>{{ comment.comment }}</p>
+</div>
+{% empty %}
+<ul><li>No comments on this product</li></ul>
+{% endfor %}
+{% endblock %}

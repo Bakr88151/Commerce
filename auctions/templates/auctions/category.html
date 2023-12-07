@@ -1,0 +1,35 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+
+    <div class="listings">
+    {% for listing in listings %}
+        {% if listing.active %}
+            <a href="{% url 'listing' listing.id %}" style="text-decoration: none; color: inherit;">
+                    <div class="card">
+                        <div class="card-image">
+                            {% if listing.image %}
+                                <img class="card-img-top" src="{{ listing.image }}" alt="{{ listing.title }} image" style="height: 360px; object-fit: contain;">
+                            {% else %}
+                                <img class="card-img-top" src="{{ shopping_cart_img }}" alt="{{ listing.title }} image">
+                            {% endif %}
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">{{ listing.title }}</h3>
+                            <p class="card-description" >{{ listing.description | slice:"1000" }}</p>
+                            <div class="date">{{ listing.date }}</div>
+                            {% if listing.highest_bid %}
+                            <div class="price"><strong>Price: </strong>${{ listing.highest_bid.value | floatformat:2 }}</div>
+                            {% else %}
+                            <div class="price"><strong>Price: </strong>${{ listing.base_price | floatformat:2 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+            </a>
+        {% endif %}
+    {% empty %}
+        <h1>No available listings in this category</h1>
+    {% endfor %}
+    </div>
+
+{% endblock %}

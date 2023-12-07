@@ -1,0 +1,31 @@
+{% extends 'auctions/layout.html' %}
+
+{% block body %}
+
+    {% for item in watchlist %}
+    <a href="{% url 'listing' item.listing.id %}" style="text-decoration: none; color: inherit;">
+        <div class="card">
+            <div class="card-image">
+                {% if listing.image %}
+                    <img class="card-img-top" src="{{ item.listing.image }}" alt="{{ item.listing.title }} image" style="height: 360px; object-fit: contain;">
+                {% else %}
+                    <img class="card-img-top" src="{{ shopping_cart_img }}" alt="{{ item.listing.title }} image">
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">{{ item.listing.title }}</h3>
+                <p class="card-description" >{{ item.listing.description | slice:"1000" }}</p>
+                <div class="date">{{ item.listing.date }}</div>
+                {% if item.listing.highest_bid %}
+                <div class="price"><strong>Price: </strong>${{ item.listing.highest_bid.value | floatformat:2 }}</div>
+                {% else %}
+                <div class="price"><strong>Price: </strong>${{ item.listing.base_price | floatformat:2 }}</div>
+                {% endif %}
+            </div>
+        </div>
+</a>
+    {% empty %}
+        <h3>No items in your WatchList</h3>
+    {% endfor %}
+
+{% endblock %}
